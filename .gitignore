@@ -1,12 +1,3 @@
 __pycache__/
 CV_INV/
-behavior_det.py
-face_detection.py
-face_embedder.py
-face_recognizer.py
-tracker.py
-app.py
-video_process.py
-config.py
-models/
 data/

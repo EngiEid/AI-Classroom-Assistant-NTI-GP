@@ -428,7 +428,7 @@ The image-processing pipeline can detect persons, recognize known students, anno
 
 A validation video is also included:
 
-**File:** [`test_video1.mp4`](test_video1.mp4)
+<video src="test_video1.mp4" controls width="800"></video>
 
 The video-processing pipeline applies:
 

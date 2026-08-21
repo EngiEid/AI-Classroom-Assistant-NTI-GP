@@ -426,9 +426,12 @@ The image-processing pipeline can detect persons, recognize known students, anno
 
 ### Validation Video
 
-A validation video is also included:
+<h2>🎥 Video Validation</h2>
 
-<video src="test_video1.mp4" controls width="800"></video>
+<video src="https://github.com/EngiEid/AI-Classroom-Assistant-NTI-GP/raw/refs/heads/main/test_video1.mp4"
+       controls
+       width="800">
+</video>
 
 The video-processing pipeline applies:
 

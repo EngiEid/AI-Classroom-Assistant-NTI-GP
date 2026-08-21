@@ -471,7 +471,7 @@ pip install -r requirements.txt
 Run the main application with:
 
 ```bash
-python main.py
+streamlit run main.py
 ```
 
 The GUI provides the interface for interacting with the system, registering students, processing classroom media, and viewing the generated results.

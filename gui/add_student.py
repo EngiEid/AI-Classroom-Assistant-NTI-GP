@@ -164,7 +164,7 @@ def render_add_student_page():
                     status_container.success(f"✅ Photo #{idx+1}: Face registered successfully.")
 
         if saved_count > 0:
-            st.balloons()
+            # st.balloons()
             st.success(f"🎉 **Student '{student_name}' registered successfully with {saved_count} face embeddings!**")
             st.session_state.captured_images = []
         else:

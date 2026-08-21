@@ -145,7 +145,7 @@ def run_app():
 
                     # عرض الفيديو المعالج بصفة دائمة بمجرد انتهاء المعالجة
                     if st.session_state.get("processing_success", False):
-                        st.balloons()
+                        # st.balloons()
                         st.success("✅ Video processing completed! Attendance & Behavioral events recorded.")
                         
                         with col_output_vid:

@@ -49,42 +49,31 @@ class VideoProcessor:
         track_conf=0.25,
         event_buffer_frames=15,
     ):
-        # موديل مخصص لاكتشاف الأشخاص وتتبعهم بالكامل (Full Body)
         self.person_model = YOLO(person_model_path)
         
-        # موديل مخصص لاكتشاف الـ Events (مثل رافع ايده، بياكل، إلخ)
         self.event_model = YOLO(event_model_path)
 
         self.face_engine = FaceEngine(sim_threshold=sim_threshold)
         self.reload_known_faces()
 
-        # -----------------------------
-        # Tracking / identity state
-        # -----------------------------
+
         self.track_identities = {}
         self.track_last_seen = {}
         self.face_recognition_interval = max(1, int(face_recognition_interval))
         self.track_conf = float(track_conf)
 
-        # -----------------------------
-        # Temporal event state
-        # -----------------------------
+
         self.active_events = {}
         self.event_buffer_frames = int(event_buffer_frames)
 
-    # =========================================================
     # FACE DATABASE
-    # =========================================================
-
     def reload_known_faces(self):
         self.known_students = get_all_known_faces()
         self.known_ids, self.known_matrix = (
             self.face_engine.prepare_known_faces(self.known_students)
         )
 
-    # =========================================================
     # TIME
-    # =========================================================
 
     def _frame_to_timestamp(self, frame_idx, fps, base_time=None):
         seconds = int(frame_idx / fps) if fps > 0 else 0
@@ -96,9 +85,7 @@ class VideoProcessor:
 
         return str(timedelta(seconds=seconds))
 
-    # =========================================================
     # GEOMETRY HELPERS
-    # =========================================================
 
     @staticmethod
     def _bbox_iou(box_a, box_b):
@@ -199,9 +186,7 @@ class VideoProcessor:
 
         return best_person
 
-    # =========================================================
     # FACE → TRACK ASSOCIATION
-    # =========================================================
 
     def _match_face_to_person_track(self, face_bbox, tracked_persons):
         best_person = None
@@ -248,9 +233,7 @@ class VideoProcessor:
 
         return best_person
 
-    # =========================================================
     # DRAWING
-    # =========================================================
 
     def _draw_person_track(self, frame, person):
         x1, y1, x2, y2 = map(int, person["bbox"])
@@ -260,7 +243,7 @@ class VideoProcessor:
         name = person.get("name")
         face_bbox = person.get("face_bbox")
 
-        # 1. رسم مربع الشخص بالكامل (Full Body Box)
+        # Full Body Box
         if stu_id is not None and name:
             label = f"{name} | Track {track_id}" if "track_id" in person else f"{name}"
             color = (0, 255, 0)
@@ -271,7 +254,7 @@ class VideoProcessor:
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
         cv2.putText(frame, label, (x1, max(y1 - 8, 15)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-        # 2. رسم مربع الوجه إذا كان موجوداً بداخله
+        # 2. Face Box
         if face_bbox is not None:
             fx1, fy1, fx2, fy2 = map(int, face_bbox)
             face_color = (0, 255, 0) if stu_id is not None else (0, 0, 255)
@@ -281,10 +264,7 @@ class VideoProcessor:
             face_label = f"{name}" if stu_id is not None else "Unknown Face"
             cv2.putText(frame, face_label, (fx1, max(fy1 - 5, 15)), cv2.FONT_HERSHEY_SIMPLEX, 0.45, face_color, 2)
 
-    # =========================================================
     # EVENT STATE MANAGEMENT
-    # =========================================================
-
     def _update_event(
         self,
         track_id,
@@ -357,9 +337,7 @@ class VideoProcessor:
         for event_key in ended_events:
             self.active_events.pop(event_key, None)
 
-    # =========================================================
     # VIDEO PROCESSING
-    # =========================================================
 
     def process_video_file(
         self,
@@ -425,9 +403,7 @@ class VideoProcessor:
 
                 display_frame = frame.copy()
 
-                # =================================================
-                # 1. YOLOv8n FULL PERSON DETECTION + TRACKING
-                # =================================================
+                # YOLOv8n FULL PERSON DETECTION + TRACKING
 
                 results = self.person_model.track(
                     frame,
@@ -499,9 +475,7 @@ class VideoProcessor:
 
                         self.track_last_seen[track_id] = frame_idx
 
-                # =================================================
                 # 2. PERIODIC FACE RECOGNITION
-                # =================================================
 
                 should_recognize = (
                     frame_idx % self.face_recognition_interval == 0
@@ -579,9 +553,7 @@ class VideoProcessor:
 
                             attended_students.add(stu_id)
 
-                # =================================================
                 # 3. DRAW PERSON TRACKS (FULL BODY + FACE)
-                # =================================================
 
                 for person in tracked_persons.values():
                     self._draw_person_track(
@@ -589,9 +561,7 @@ class VideoProcessor:
                         person,
                     )
 
-                # =================================================
                 # 4. BEST.PT EVENT DETECTION
-                # =================================================
 
                 event_results = self.event_model(
                     frame,
@@ -722,9 +692,7 @@ class VideoProcessor:
                                 "event_type": event_type,
                             }
 
-                # =================================================
                 # 5. UPDATE TEMPORAL EVENTS
-                # =================================================
 
                 for (
                     event_key,
@@ -779,9 +747,7 @@ class VideoProcessor:
                         2,
                     )
 
-                # =================================================
                 # 6. CLOSE EXPIRED EVENTS
-                # =================================================
 
                 self._close_expired_events(
                     frame_idx=frame_idx,
@@ -790,9 +756,7 @@ class VideoProcessor:
                     base_time=start_datetime,
                 )
 
-                # =================================================
                 # 7. WRITE FRAME
-                # =================================================
                 cv2.imshow("Classroom AI - Processing", display_frame)
                 
                 if cv2.getWindowProperty("Classroom AI - Processing", cv2.WND_PROP_VISIBLE) >= 1:
@@ -848,9 +812,7 @@ class VideoProcessor:
             out.release()
             cv2.destroyAllWindows()
 
-        # =========================================================
         # 9. CONVERT VIDEO TO H.264
-        # =========================================================
 
         abs_temp_output = os.path.abspath(
             temp_output
@@ -899,9 +861,9 @@ class VideoProcessor:
 
             return abs_output_path
 
-    # =========================================================
+
     # IMAGE PROCESSING
-    # =========================================================
+
 
     def process_image_file(self, image_path, class_id):
         self.reload_known_faces()
@@ -930,9 +892,7 @@ class VideoProcessor:
 
         conn.close()
 
-        # =====================================================
         # 1. YOLOv8n FULL PERSON DETECTION ON IMAGE
-        # =====================================================
         person_results = self.person_model(
             frame,
             verbose=False,
@@ -959,9 +919,7 @@ class VideoProcessor:
                     "face_bbox": None,
                 }
 
-        # =====================================================
         # 2. FACE RECOGNITION & ASSOCIATION TO PERSONS
-        # =====================================================
 
         face_results = self.face_engine.process_frame(
             frame,
@@ -1015,9 +973,7 @@ class VideoProcessor:
         for person in detected_persons.values():
             self._draw_person_track(annotated_frame, person)
 
-        # =====================================================
-        # 3. BEST.PT EVENT DETECTION (IMAGE)
-        # =====================================================
+        # 3. BEST.PT EVENT DETECTION
 
         yolo_results = self.event_model(
             frame,
@@ -1135,9 +1091,7 @@ class VideoProcessor:
                         2,
                     )
 
-            # =================================================
             # 4. RECORD IMAGE EVENTS
-            # =================================================
 
             for (
                 (stu_id, event_type),

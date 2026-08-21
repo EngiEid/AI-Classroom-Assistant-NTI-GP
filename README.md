@@ -508,7 +508,7 @@ The custom `best.pt` model is used for classroom event detection, while `yolov8n
 Depending on the configured application entry point, run:
 
 ```bash
-python main.py
+streamlit run main.py
 ```
 
 or, if the GUI is launched through the application module:

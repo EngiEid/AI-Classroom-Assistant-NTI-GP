@@ -108,17 +108,14 @@ Nabehni/
 │   ├── face_engine.py
 │   └── video_processor.py
 │
-├── CV_INV/
-│
 ├── data/
 │   └── student_images/
+|   └── db.sqlite3
 │
 ├── gui/
 │   ├── add_student.py
 │   ├── app.py
 │   └── dashboard.py
-│
-├── db.sqlite3
 │
 ├── database.py
 ├── main.py
@@ -126,7 +123,7 @@ Nabehni/
 ├── best.pt
 ├── yolov8n.pt
 │
-├── Event Detection Model...
+├── Event Detection Model.ipynb
 │
 ├── test_photo1.png
 ├── test_video1.mp4
@@ -426,22 +423,6 @@ The system was validated using both **image** and **video** inputs to demonstrat
 
 ---
 
-### 🎥 Video Validation
-
-<p align="center">
-  <video
-    src="https://github.com/EngiEid/AI-Classroom-Assistant-NTI-GP/raw/refs/heads/main/test_video1.mp4"
-    controls
-    width="850">
-  </video>
-</p>
-
-<p align="center">
-  <em>Figure 2 — Nabehni video validation using test_video1.mp4</em>
-</p>
-
----
-
 ## ⚙️ Technologies Used
 
 | Technology | Purpose |
@@ -508,12 +489,6 @@ Depending on the configured application entry point, run:
 
 ```bash
 streamlit run main.py
-```
-
-or, if the GUI is launched through the application module:
-
-```bash
-streamlit run gui/app.py
 ```
 
 ---

@@ -412,34 +412,33 @@ Upload Image / Video
 
 ## 🧪 Validation
 
-The project includes dedicated validation media.
+The system was validated using both **image** and **video** inputs to demonstrate student recognition, person detection, attendance recording, and classroom event detection.
 
-### Validation Image
+### 📷 Image Validation
 
-The following image is included as a validation example:
+<p align="center">
+  <img src="./test_photo1.png" alt="Nabehni Image Validation" width="850">
+</p>
 
-![Nabehni Validation Image](test_photo1.png)
+<p align="center">
+  <em>Figure 1 — Nabehni validation result using test_photo1.png</em>
+</p>
 
-**File:** `test_photo1.png`
+---
 
-The image-processing pipeline can detect persons, recognize known students, annotate detected faces/persons, and detect supported classroom events.
+### 🎥 Video Validation
 
-### Validation Video
+<p align="center">
+  <video
+    src="https://github.com/EngiEid/AI-Classroom-Assistant-NTI-GP/raw/refs/heads/main/test_video1.mp4"
+    controls
+    width="850">
+  </video>
+</p>
 
-A validation video is also included:
-
-**File:** [`test_video1.mp4`](test_video1.mp4)
-
-The video-processing pipeline applies:
-
-- Person detection
-- ByteTrack tracking
-- Periodic face recognition
-- Student-track association
-- Attendance recording
-- Custom event detection
-- Temporal event handling
-- Annotated video generation
+<p align="center">
+  <em>Figure 2 — Nabehni video validation using test_video1.mp4</em>
+</p>
 
 ---
 
